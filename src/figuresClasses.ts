@@ -1,13 +1,25 @@
+export enum Color {
+  Red = 'red',
+  Green = 'green',
+  Blue = 'blue',
+}
+
+export enum Shape {
+  Triangle = 'triangle',
+  Circle = 'circle',
+  Rectangle = 'rectangle',
+}
+
 export interface Figure {
-  shape: 'triangle' | 'circle' | 'rectangle';
-  color: 'red' | 'green' | 'blue';
+  shape: Shape;
+  color: Color;
   getArea(): number;
 }
 
 export class Triangle implements Figure {
-  shape = 'triangle' as const;
+  shape = Shape.Triangle;
 
-  color: 'red' | 'green' | 'blue';
+  color: Color;
 
   a: number;
 
@@ -15,14 +27,9 @@ export class Triangle implements Figure {
 
   c: number;
 
-  constructor(
-    color: 'red' | 'green' | 'blue',
-    a: number,
-    b: number,
-    c: number,
-  ) {
+  constructor(color: Color, a: number, b: number, c: number) {
     if (a <= 0 || b <= 0 || c <= 0) {
-      throw new Error('Sides must be greater than 0');
+      throw new Error('Triangle sides must be greater than 0');
     }
 
     const sides = [a, b, c].sort((x, y) => x - y);
@@ -46,13 +53,13 @@ export class Triangle implements Figure {
 }
 
 export class Circle implements Figure {
-  shape = 'circle' as const;
+  shape = Shape.Circle;
 
-  color: 'red' | 'green' | 'blue';
+  color: Color;
 
   radius: number;
 
-  constructor(color: 'red' | 'green' | 'blue', radius: number) {
+  constructor(color: Color, radius: number) {
     if (radius <= 0) {
       throw new Error('Radius must be greater than 0');
     }
@@ -61,24 +68,28 @@ export class Circle implements Figure {
   }
 
   getArea(): number {
-    const area = Math.PI * this.radius * this.radius;
+    const area = Math.PI * this.radius ** 2;
 
     return Math.floor(area * 100) / 100;
   }
 }
 
 export class Rectangle implements Figure {
-  shape = 'rectangle' as const;
+  shape = Shape.Rectangle;
 
-  color: 'red' | 'green' | 'blue';
+  color: Color;
 
   width: number;
 
   height: number;
 
-  constructor(color: 'red' | 'green' | 'blue', width: number, height: number) {
-    if (width <= 0 || height <= 0) {
-      throw new Error('Width and height must be greater than 0');
+  constructor(color: Color, width: number, height: number) {
+    if (width <= 0) {
+      throw new Error('Width must be greater than 0');
+    }
+
+    if (height <= 0) {
+      throw new Error('Height must be greater than 0');
     }
     this.color = color;
     this.width = width;
@@ -92,6 +103,6 @@ export class Rectangle implements Figure {
   }
 }
 
-export function getInfo(figure): string {
+export function getInfo(figure: Figure): string {
   return `A ${figure.color} ${figure.shape} - ${figure.getArea()}`;
 }
